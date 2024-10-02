@@ -1,0 +1,5 @@
+homepage: "https://www.accessiweb.it"
+documentation: "https://www.accessiweb.com/tagmanager"
+versions:
+  - sha: faa70cd51feaba95346635cacfd2e911498469ff
+    changeNotes: Initial release.
