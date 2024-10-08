@@ -1,5 +1,5 @@
 homepage: "https://www.accessiweb.it"
-documentation: "https://www.accessiweb.com/tagmanager"
+documentation: "https://www.accessiweb.it/tagmanager"
 versions:
   - sha: 2be5f9abfef6f994d51d2feccd08331284dd5990
     changeNotes: Update LICENSE to Apache 2.0.
