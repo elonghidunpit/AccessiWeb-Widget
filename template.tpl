@@ -187,9 +187,11 @@ ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 const injectScript = require('injectScript');
 const logToConsole = require('logToConsole');
 const templateStorage = require('templateStorage');
+const encodeUri = require('encodeUri');
+const encodeUriComponent = require('encodeUriComponent');
 
 function main() {
-    // Memorizza la configurazione del widget in templateStorage
+    // Memorizzo la configurazione del widget in templateStorage
     templateStorage.setItem('acswConfig', {
         LicenseKey: data.LicenseKey,
         PrimaryColor: data.PrimaryColor,
@@ -202,17 +204,39 @@ function main() {
         IconSize: data.IconSize
     });
 
-    logToConsole('Widget AccessiWeb configurato correttamente tramite Google Tag Manager');
+    logToConsole('Widget AccessiWeb configurato correttamente');
 
-    // Chiama gtmOnSuccess immediatamente dopo la configurazione
+    // Chiamata a gtmOnSuccess
     data.gtmOnSuccess();
 
-    // Carica lo script utilizzando l'API injectScript
-    injectScript('https://www.accessiweb.it/widget/acsw.js', () => {
+    // Costruisco l'URL con parametri definiti
+    let scriptUrl = encodeUri('https://www.accessiweb.it/widget/acsw.js');
+    const params = [
+        { key: 'LicenseKey', value: data.LicenseKey },
+        { key: 'PrimaryColor', value: data.PrimaryColor },
+        { key: 'PositionX', value: data.PositionX },
+        { key: 'PositionY', value: data.PositionY },
+        { key: 'OffsetX', value: data.OffsetX },
+        { key: 'OffsetY', value: data.OffsetY },
+        { key: 'UnitX', value: data.UnitX },
+        { key: 'UnitY', value: data.UnitY },
+        { key: 'IconSize', value: data.IconSize }
+    ];
+
+    const queryString = params
+        .filter(param => param.value !== undefined && param.value !== null)
+        .map(param => param.key + '=' + encodeUriComponent(param.value))
+        .join('&');
+
+    if (queryString) {
+        scriptUrl += '?' + queryString;
+    }
+
+    // Carico lo script utilizzando l'API injectScript
+    injectScript(scriptUrl, () => {
         logToConsole('Script acsw.js caricato con successo');
     }, () => {
         logToConsole('Errore: impossibile caricare lo script acsw.js');
-        // In caso di errore, chiama gtmOnFailure
         data.gtmOnFailure(); 
     });
 }
@@ -301,6 +325,6 @@ scenarios:
 
 ___NOTES___
 
-Created on 09/10/2024, 17:25:19
+Created on 31/10/2024, 17:07:07
 
 
